@@ -58,7 +58,7 @@ void WS2812::initialize(uint pin, uint length, PIO pio, uint sm, DataByte b1,
   ws2812_program_init(pio, sm, offset, pin, 800000, bits);
 }
 
-uint32_t WS2812::convertData(uint32_t rgbw) {
+uint32_t WS2812::convertData(uint32_t rgbw) const {
   uint32_t result = 0;
   for (uint b = 0; b < 4; b++) {
     switch (bytes[b]) {
@@ -87,6 +87,10 @@ void WS2812::setPixelColor(uint index, uint32_t color) {
     data[index] = convertData(color);
   }
 }
+
+uint32_t WS2812::mapLogicalRgbToBus(uint32_t logicalRgb) const { return convertData(logicalRgb); }
+
+void WS2812::setPixelColorUnsafeDevice(uint index, uint32_t deviceFormatWord) { data[index] = deviceFormatWord; }
 
 void WS2812::setPixelColor(uint index, uint8_t red, uint8_t green,
                            uint8_t blue) {

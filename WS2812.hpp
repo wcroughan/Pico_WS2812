@@ -36,6 +36,17 @@ class WS2812 {
         void setPixelColor(uint index, uint32_t color);
         void setPixelColor(uint index, uint8_t red, uint8_t green, uint8_t blue);
         void setPixelColor(uint index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white);
+        /**
+         * @brief Writes a PIO-ready pixel word with no bounds check (caller must ensure index < length).
+         *
+         * @param index Pixel index in the strip buffer
+         * @param deviceFormatWord Value already permuted for this strip's byte order (output of mapLogicalRgbToBus)
+         */
+        void setPixelColorUnsafeDevice(uint index, uint32_t deviceFormatWord);
+        /**
+         * @brief Converts logical 0x00RRGGBB (or RGBW in high byte) to the wire order this strip expects.
+         */
+        uint32_t mapLogicalRgbToBus(uint32_t logicalRgb) const;
         void fill(uint32_t color);
         void fill(uint32_t color, uint first);
         void fill(uint32_t color, uint first, uint count);
@@ -50,7 +61,7 @@ class WS2812 {
         uint32_t *data;
 
         void initialize(uint pin, uint length, PIO pio, uint sm, DataByte b1, DataByte b2, DataByte b3, DataByte b4);
-        uint32_t convertData(uint32_t rgbw);
+        uint32_t convertData(uint32_t rgbw) const;
 
 };
 
